@@ -1,2 +1,3 @@
 excluded_folders: [".git", ".node_modules"]
 show_full_stat: True
+display_project_length: True
