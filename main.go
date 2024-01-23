@@ -15,6 +15,7 @@ type Config struct {
 
 func main() {
 	config := parse_config("./config.yaml")
+	file_lenght("./config.yaml")
 	read_directory("./")
 	fmt.Println(config)
 }
@@ -27,6 +28,19 @@ func read_directory(path string) {
 	for _, da := range dirs {
 		fmt.Println(da.IsDir())
 	}
+}
+
+func file_lenght(path string) {
+	file, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	stat, err := file.Stat()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(stat.Size())
 }
 
 func parse_config(path string) Config {
