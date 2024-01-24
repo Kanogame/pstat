@@ -1,10 +1,11 @@
 package utils
 
 type Config struct {
-	Excluded_folders []string
-	Show_full_stat   bool
-	Known_only       bool
-	Known_extensions []string
+	Excluded_folders   []string
+	Maximum_scan_depth int
+	Show_full_stat     bool
+	Known_only         bool
+	Known_extensions   []string
 }
 
 type File struct {

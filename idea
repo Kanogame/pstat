@@ -2,6 +2,6 @@ $ pstat ./path/to/project
 project lenght: 19k characters
 project size: 14 kb (roughly)
 language breakdown:
-python: 20%
-c: 10%
-.zig (unknown): 70%
+python: 20% 4 files
+c: 10% 1 files
+.zig (unknown): 70% 3 files

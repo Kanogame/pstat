@@ -9,16 +9,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const maxDepth = 10
-
 func Read_directory(path string, config utils.Config) ([]utils.File, int64) {
 	var folderSize = get_file_lenght(path)
 	var folderData = make([]utils.File, 0)
-	scan_folder(path, 0, config.Excluded_folders, &folderData, config.Known_extensions, config.Known_only)
+	scan_folder(path, 0, config.Excluded_folders, &folderData, config.Known_extensions, config.Known_only, config.Maximum_scan_depth)
 	return folderData, folderSize
 }
 
-func scan_folder(workingDirectory string, depth int, except []string, folderData *[]utils.File, knownArr []string, isKnown bool) {
+func scan_folder(workingDirectory string, depth int, except []string, folderData *[]utils.File, knownArr []string, isKnown bool, maxDepth int) {
 	if depth >= maxDepth {
 		return
 	}
@@ -29,7 +27,7 @@ func scan_folder(workingDirectory string, depth int, except []string, folderData
 			continue
 		}
 		if file.IsDir() {
-			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except, folderData, knownArr, isKnown)
+			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except, folderData, knownArr, isKnown, maxDepth)
 		} else {
 			if strings.Contains(file.Name(), ".") {
 				scanned := scan_file(workingDirectory, file.Name(), knownArr, isKnown)
