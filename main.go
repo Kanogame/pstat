@@ -7,7 +7,6 @@ import (
 
 func main() {
 	config := file.Parse_config("./config.yaml")
-	file.File_lenght("./config.yaml")
-	file.Read_directory("./")
+	file.Read_directory("./", config)
 	fmt.Println(config)
 }

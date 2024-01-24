@@ -7,5 +7,5 @@ type Config struct {
 
 type File struct {
 	File_lenght int64
-	extension   string
+	Extension   string
 }

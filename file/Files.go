@@ -2,22 +2,41 @@ package file
 
 import (
 	"bufio"
+	"fmt"
 	utils "main/utils"
 	"os"
+	"slices"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
 
-func Read_directory(path string) {
-	scan_folder(path)
+const maxDepth = 10
+
+func Read_directory(path string, config utils.Config) {
+	scan_folder("./", 0, config.Excluded_folders)
 }
 
-func scan_folder(workingDirectory string) {
-	// TODO
+func scan_folder(workingDirectory string, depth int, except []string) {
+	if depth >= maxDepth {
+		return
+	}
+	dir, err := os.ReadDir(workingDirectory)
+	utils.HandleError(err)
+	for _, file := range dir {
+		if slices.Contains(except, file.Name()) {
+			continue
+		}
+		if file.IsDir() {
+			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except)
+		}
+		fmt.Println(scan_file(workingDirectory, file.Name()))
+	}
 }
 
-func scan_file(folderName string, fileName string) {
-
+func scan_file(folder_name string, file_name string) utils.File {
+	Split := strings.Split(file_name, ".")
+	return utils.File{File_lenght: get_file_lenght(folder_name + "/" + file_name), Extension: Split[len(Split)-1]}
 }
 
 func get_file_lenght(path string) int64 {
