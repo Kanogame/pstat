@@ -2,7 +2,6 @@ package file
 
 import (
 	"bufio"
-	"fmt"
 	utils "main/utils"
 	"os"
 
@@ -10,24 +9,24 @@ import (
 )
 
 func Read_directory(path string) {
-	dirs, err := os.ReadDir(path)
-	utils.HandleError(err)
-	for _, da := range dirs {
-		fmt.Println(da.IsDir())
-	}
+	scan_folder(path)
 }
 
-func File_lenght(path string) {
+func scan_folder(workingDirectory string) {
+	// TODO
+}
+
+func scan_file(folderName string, fileName string) {
+
+}
+
+func get_file_lenght(path string) int64 {
 	file, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
+	utils.HandleError(err)
 	defer file.Close()
 	stat, err := file.Stat()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(stat.Size())
+	utils.HandleError(err)
+	return stat.Size()
 }
 
 func Parse_config(path string) utils.Config {
