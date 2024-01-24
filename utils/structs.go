@@ -9,3 +9,8 @@ type File struct {
 	File_lenght int64
 	Extension   string
 }
+
+type Language struct {
+	Lenght    int64
+	FileCount int32
+}
