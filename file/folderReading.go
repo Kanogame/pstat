@@ -14,11 +14,11 @@ const maxDepth = 10
 func Read_directory(path string, config utils.Config) ([]utils.File, int64) {
 	var folderSize = get_file_lenght(path)
 	var folderData = make([]utils.File, 0)
-	scan_folder(path, 0, config.Excluded_folders, &folderData)
+	scan_folder(path, 0, config.Excluded_folders, &folderData, config.Known_extensions, config.Known_only)
 	return folderData, folderSize
 }
 
-func scan_folder(workingDirectory string, depth int, except []string, folderData *[]utils.File) {
+func scan_folder(workingDirectory string, depth int, except []string, folderData *[]utils.File, knownArr []string, isKnown bool) {
 	if depth >= maxDepth {
 		return
 	}
@@ -29,17 +29,23 @@ func scan_folder(workingDirectory string, depth int, except []string, folderData
 			continue
 		}
 		if file.IsDir() {
-			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except, folderData)
+			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except, folderData, knownArr, isKnown)
 		} else {
 			if strings.Contains(file.Name(), ".") {
-				*folderData = append(*folderData, scan_file(workingDirectory, file.Name()))
+				scanned := scan_file(workingDirectory, file.Name(), knownArr, isKnown)
+				if (scanned != utils.File{}) {
+					*folderData = append(*folderData, scanned)
+				}
 			}
 		}
 	}
 }
 
-func scan_file(folder_name string, file_name string) utils.File {
+func scan_file(folder_name string, file_name string, knownArr []string, isKnown bool) utils.File {
 	Split := strings.Split(file_name, ".")
+	if isKnown && !slices.Contains(knownArr, Split[len(Split)-1]) {
+		return utils.File{}
+	}
 	return utils.File{File_lenght: get_file_lenght(folder_name + "/" + file_name), Extension: Split[len(Split)-1]}
 }
 
