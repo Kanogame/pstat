@@ -1,7 +1,7 @@
-excluded_folders: [".git", ".node_modules"]
+excluded_folders: [".git", "node_modules"]
 display_project_length: True
 maximum_scan_depth: 10
-known_only: True
+known_only: False
 known_extensions: [
   c, md, go, yaml
 ]
