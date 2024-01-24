@@ -7,7 +7,17 @@ import (
 	"sort"
 )
 
-func Get_stats(folderData []utils.File, folderSize int64, config utils.Config) {
+func Display_stats(folderData []utils.File, config utils.Config) {
+	statArr, keys, sum := sort_map(folderData)
+	fmt.Printf("project lenght: %vk characters\n", sum/1000)
+	fmt.Println("language breakdown:")
+	for _, key := range keys {
+		data := statArr[key]
+		fmt.Printf(".%v%v: %v%% (%v files)\n", key, known_lang(config.Known_extensions, key), (100*data.Lenght)/sum, data.FileCount)
+	}
+}
+
+func sort_map(folderData []utils.File) (map[string]utils.Language, []string, int64) {
 	var lang_size_stat = make(map[string]utils.Language)
 	var sum int64 = 0
 	var keys []string
@@ -24,13 +34,7 @@ func Get_stats(folderData []utils.File, folderSize int64, config utils.Config) {
 	sort.SliceStable(keys, func(i, j int) bool {
 		return lang_size_stat[keys[i]].Lenght > lang_size_stat[keys[j]].Lenght
 	})
-
-	fmt.Printf("project lenght: %vk characters\n", sum/1000)
-	fmt.Println("language breakdown:")
-	for _, key := range keys {
-		data := lang_size_stat[key]
-		fmt.Printf(".%v%v: %v%% (%v files)\n", key, known_lang(config.Known_extensions, key), (100*data.Lenght)/sum, data.FileCount)
-	}
+	return lang_size_stat, keys, sum
 }
 
 func known_lang(known_langs []string, lang string) string {

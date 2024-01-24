@@ -14,6 +14,6 @@ func main() {
 	}
 	path := os.Args[1]
 	config := file.Parse_config("./config.yaml")
-	folderData, folderSize := file.Read_directory(path, config)
-	stats.Get_stats(folderData, folderSize, config)
+	folderData := file.Read_directory(path, config)
+	stats.Display_stats(folderData, config)
 }

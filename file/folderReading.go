@@ -9,11 +9,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func Read_directory(path string, config utils.Config) ([]utils.File, int64) {
-	var folderSize = get_file_lenght(path)
+func Read_directory(path string, config utils.Config) []utils.File {
 	var folderData = make([]utils.File, 0)
 	scan_folder(path, 0, config.Excluded_folders, &folderData, config.Known_extensions, config.Known_only, config.Maximum_scan_depth)
-	return folderData, folderSize
+	return folderData
 }
 
 func scan_folder(workingDirectory string, depth int, except []string, folderData *[]utils.File, knownArr []string, isKnown bool, maxDepth int) {
