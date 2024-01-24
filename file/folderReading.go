@@ -1,8 +1,6 @@
 package file
 
 import (
-	"bufio"
-	"fmt"
 	utils "main/utils"
 	"os"
 	"slices"
@@ -13,11 +11,13 @@ import (
 
 const maxDepth = 10
 
-func Read_directory(path string, config utils.Config) {
-	scan_folder("./", 0, config.Excluded_folders)
+func Read_directory(path string, config utils.Config) []utils.File {
+	var folderData = make([]utils.File, 0)
+	scan_folder("./", 0, config.Excluded_folders, &folderData)
+	return folderData
 }
 
-func scan_folder(workingDirectory string, depth int, except []string) {
+func scan_folder(workingDirectory string, depth int, except []string, folderData *[]utils.File) {
 	if depth >= maxDepth {
 		return
 	}
@@ -28,9 +28,9 @@ func scan_folder(workingDirectory string, depth int, except []string) {
 			continue
 		}
 		if file.IsDir() {
-			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except)
+			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except, folderData)
 		}
-		fmt.Println(scan_file(workingDirectory, file.Name()))
+		*folderData = append(*folderData, scan_file(workingDirectory, file.Name()))
 	}
 }
 
@@ -56,19 +56,4 @@ func Parse_config(path string) utils.Config {
 	data := utils.Config{}
 	yaml.Unmarshal(file, &data)
 	return data
-}
-
-func Read_file(path string) []string {
-	file, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
-
-	defer file.Close()
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }
