@@ -11,10 +11,11 @@ import (
 
 const maxDepth = 10
 
-func Read_directory(path string, config utils.Config) []utils.File {
+func Read_directory(path string, config utils.Config) ([]utils.File, int64) {
+	var folderSize = get_file_lenght(path)
 	var folderData = make([]utils.File, 0)
-	scan_folder("./", 0, config.Excluded_folders, &folderData)
-	return folderData
+	scan_folder(path, 0, config.Excluded_folders, &folderData)
+	return folderData, folderSize
 }
 
 func scan_folder(workingDirectory string, depth int, except []string, folderData *[]utils.File) {
@@ -29,8 +30,11 @@ func scan_folder(workingDirectory string, depth int, except []string, folderData
 		}
 		if file.IsDir() {
 			scan_folder(workingDirectory+"/"+file.Name(), depth+1, except, folderData)
+		} else {
+			if strings.Contains(file.Name(), ".") {
+				*folderData = append(*folderData, scan_file(workingDirectory, file.Name()))
+			}
 		}
-		*folderData = append(*folderData, scan_file(workingDirectory, file.Name()))
 	}
 }
 
